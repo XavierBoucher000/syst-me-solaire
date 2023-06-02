@@ -75,9 +75,9 @@ x = [
 ]
 
 def pop(temps):
-    liste_p = [[[0, 0],[-69816900000.0, 0], [-108942109000.0, 0], [-152097701000.0, 0], [-249232432000.0, 0], [-816520800000.0, 0], [-1513325783000.0, 0], [-3002962242000.0, 0], [-4546599342000.0, 0]]]
+    liste_p = [[[0, 0],[-69788000000, 0], [-108942109000.0, 0], [-152097701000.0, 0], [-249232432000.0, 0], [-816520800000.0, 0], [-1513325783000.0, 0], [-3002962242000.0, 0], [-4546599342000.0, 0]]]
     liste_v = [[[0, 0], [0, 38860.0], [0, 34790.0], [0, 29290.0], [0, 24130.0], [0, 13070.0], [0, 9690.0], [0, 6810.0], [0, 5430.0]]]
-    liste_a =[[[-2.573758994586464e-07, 0], [-0.0272350174643321, 0], [-0.011185837735617765, 0], [-0.005738948755460302, 0], [-0.0021376102291935056, 0], [-0.00019919748084896058, 0], [-5.823101042404175e-05, 0], [-1.4767677593284985e-05, 0], [-6.437653783803956e-06, 0]]]
+    liste_a =[[[2.573758994586464e-07, 0], [0.0272350174643321, 0], [0.011185837735617765, 0], [0.005738948755460302, 0], [0.0021376102291935056, 0], [0.00019919748084896058, 0], [5.823101042404175e-05, 0], [1.4767677593284985e-05, 0], [6.437653783803956e-06, 0]]]
     for t in range(1, temps + 1):
         liste_pos_vide = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0],[0, 0]]
         liste_vit_vide = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0],[0, 0]]
@@ -95,13 +95,14 @@ def pop(temps):
                 else:
                     distx = (liste_p[t][pla_autre][0] - liste_p[t][planete_propre][0])
                     disty = (liste_p[t][pla_autre][1] - liste_p[t][planete_propre][1])
-                    angle = math.atan2(distx, disty)
+                    angle = math.atan2(disty,distx)
                     DIST = ((distx ** 2) + (disty) ** 2)
-                    liste_acc_vide[planete_propre][0] += (-math.cos(angle)*(x[pla_autre][1] * G) / DIST)
-                    liste_acc_vide[planete_propre][1] += (-math.sin(angle)*(x[pla_autre][1] * G) / DIST)
+                    liste_acc_vide[planete_propre][0] += (math.cos(angle)*(x[pla_autre][1] * G) / DIST)
+                    liste_acc_vide[planete_propre][1] += (math.sin(angle)*(x[pla_autre][1] * G) / DIST)
         liste_a.append(liste_acc_vide)
         print(temps-t)
     return liste_p
-result = (pop(3600*24*30))
+result = (pop(3600*24*360))
 # Save the result to a file using NumPy save()
 np.save('result.npy', result)
+print('Hello')
