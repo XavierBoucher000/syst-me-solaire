@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 loaded_result = np.load('result.npy')
-cut_list = loaded_result[::3600*24]
+cut_list = loaded_result[::24]
 
 # Enable interactive mode
 plt.ion()
@@ -15,7 +15,7 @@ plt.style.use('dark_background')
 fig = plt.figure(facecolor='black')
 
 # Define colors and labels
-colors = ['#FDB813', '#B89C74', '#FF9F00', '#0052A5', '#A67B5B', '#D7A558', '#C18F5A', '#00CED1', '#1E90FF']
+colors = ['#FDB813', '#B89C74', 'orange', '#0052A5', 'red', '#D7A558', '#C18F5A', '#00CED1', '#1E90FF']
 labels = ['Soleil', 'Mercure', 'Venus', 'Terre', 'Mars', 'Jupiter', 'Saturne', 'Uranus', 'Neptune']
 
 # Define scaling factors for point sizes
