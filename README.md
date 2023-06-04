@@ -1,6 +1,6 @@
-# syst-mesolaire 
+# syst-mesolaire.py 
 calculateur de position
-# animation
+# animation.py
 anime le système solaire
-# resultat
+# resultat.npy
 données précalculées
