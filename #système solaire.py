@@ -54,8 +54,6 @@ def acc():
             accelerations.append(ao)
         return accelerations
 
-        
-
 
 
 
@@ -103,7 +101,8 @@ def pop(temps):
         liste_a.append(liste_acc_vide)
         print(temps-t)
     return liste_p
-result = (pop(60*24*360*18))
+result = (pop(60))
 # Save the result to a file using NumPy save()
+#gg
 np.save('result.npy', result)
-print('Hello')
+print('Hello mother')
