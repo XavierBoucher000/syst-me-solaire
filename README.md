@@ -1,5 +1,5 @@
 # syst-mesolaire 
-calulateur de position
+calculateur de position
 # animation
 anime le système solaire
 # resultat
