@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 loaded_result = np.load('result.npy')
-cut_list = loaded_result[::3600*24]
+cut_list = loaded_result[::24*60*12]
 
 # Enable interactive mode
 plt.ion()
