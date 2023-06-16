@@ -100,8 +100,10 @@ def pop(temps):
                     liste_acc_vide[planete_propre][1] += (math.sin(angle)*(x[pla_autre][1] * G) / DIST)
         liste_a.append(liste_acc_vide)
         print(temps-t)
-    return liste_p
+        
+    return liste_a
 result = (pop(3600*24))
+
 # Save the result to a file using NumPy save()
 #gg
 np.save('result.npy', result)

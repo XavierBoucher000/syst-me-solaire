@@ -57,7 +57,7 @@ class Solar:
         acceleration_list = [[0, 0] for _ in range(len(other_objects))]
 
         for _ in range(time_steps):
-            print(time_steps-_)
+            print(time_steps - _)
             # Calculate acceleration for each astre
             for pla in range(len(other_objects)):
                 for autre_pla in range(len(other_objects)):
@@ -69,14 +69,13 @@ class Solar:
                     acceleration_list[pla][1] += acceleration[1]
 
             # Update position and velocity for each astre
-            for pla, astre in enumerate(other_objects):
-                for autre_pla, autre_astre in enumerate(other_objects):
-                    if pla == autre_pla:
-                        continue  # Skip updating position and velocity with self
 
+                    astre = other_objects[pla]
+                    autre_astre = other_objects[autre_pla]
                     astre.update_position_and_velocity(autre_astre)
 
         return acceleration_list
+
 
 # Create the celestial objects
 soleil = Solar('Soleil', 1.989e+30, [0, 0], [0, 0])
