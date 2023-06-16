@@ -1,0 +1,101 @@
+import math
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+
+class Solar:
+    def __init__(self, name, mass, position, velocity):
+        self.name = name
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
+    
+    def calculate_distance(self, other_object):
+        # Calculate the distance between self and other_object
+        x1 = self.position[0]
+        y1 = self.position[1]
+        x2 = other_object.position[0]
+        y2 = other_object.position[1]
+        distx = x2 - x1
+        disty = y2 - y1
+        distance = ((distx) ** 2 + (disty) ** 2) 
+        angle = math.atan2(disty, distx)
+        
+        return [distance, angle]
+
+    def calculate_acceleration(self, other):
+
+        G = 6.67430e-11  # Gravitational constant: m^3 kg^(-1) s^(-2)
+    
+        # Calculate the distance and angle between self and other object
+        distance = self.calculate_distance(other)[0]
+        angle = self.calculate_distance(other)[1]
+
+        # Assign the mass of the other object to self.mass
+        autre_mass = other.mass
+    
+        # Calculate the acceleration components
+        if distance == 0:
+            return [0 ,0]
+        else:
+            a_x = (math.cos(angle) * (autre_mass * G) / distance)
+            a_y = (math.sin(angle) * (autre_mass * G) / distance)
+            return [a_x, a_y]
+
+    def update_position_and_velocity(self, other):
+        acc = self.calculate_acceleration(other)
+        self.position[0] += self.velocity[0] + (0.5 * acc[0])
+        self.position[1] += self.velocity[1] + (0.5 * acc[1])
+        self.velocity[0] += acc[0]
+        self.velocity[1] += acc[1]
+        return (self.position, self.velocity)
+
+
+
+    def simulate_motion(self, other_objects, time_steps):
+        # Create a list to store the acceleration of each astre
+        acceleration_list = [[0, 0] for _ in range(len(other_objects))]
+
+        for _ in range(time_steps):
+            print(time_steps-_)
+            # Calculate acceleration for each astre
+            for pla in range(len(other_objects)):
+                for autre_pla in range(len(other_objects)):
+                    if pla == autre_pla:
+                        continue  # Skip calculating acceleration with self
+
+                    acceleration = self.calculate_acceleration(other_objects[autre_pla])
+                    acceleration_list[pla][0] += acceleration[0]
+                    acceleration_list[pla][1] += acceleration[1]
+
+            # Update position and velocity for each astre
+            for pla, astre in enumerate(other_objects):
+                for autre_pla, autre_astre in enumerate(other_objects):
+                    if pla == autre_pla:
+                        continue  # Skip updating position and velocity with self
+
+                    astre.update_position_and_velocity(autre_astre)
+
+        return acceleration_list
+
+# Create the celestial objects
+soleil = Solar('Soleil', 1.989e+30, [0, 0], [0, 0])
+mercure = Solar('Mercure', 3.3011e+23, [-69816900000.0, 0], [0, 38860.0])
+venus = Solar('Venus', 4.8675e+24, [-108942109000.0, 0], [0, 34790.0])
+terre = Solar('Terre', 5.97237e+24, [-152097701000.0, 0], [0, 29290.0])
+mars = Solar('Mars', 6.4171e+23, [-249232432000.0, 0], [0, 24130.0])
+jupiter = Solar('Jupiter', 1.8982e+27, [-816520800000.0, 0], [0, 13070.0])
+saturne = Solar('Saturne', 5.6834e+26, [-1513325783000.0, 0], [0, 9690.0])
+uranus = Solar('Uranus', 8.681e+25, [-3002962242000.0, 0], [0, 6810.0])
+neptune = Solar('Neptune', 1.02413e+26, [-4546599342000.0, 0], [0, 5430.0])
+astres = [soleil, mercure, venus, terre, mars, jupiter, saturne, uranus, neptune]
+
+# Simulate the motion of the celestial objects for a certain number of time steps
+time_steps = 24*3600  # Replace with the desired number of time steps
+acceleration_list = soleil.simulate_motion(astres, time_steps)
+
+# Print the acceleration of each astre
+for pla, acceleration in enumerate(acceleration_list):
+    print(f"Astres {pla+1} acceleration: {acceleration}")
+
+
