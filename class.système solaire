@@ -1,6 +1,4 @@
 import math
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 
 class Solar:
@@ -12,69 +10,65 @@ class Solar:
     
     def calculate_distance(self, other_object):
         # Calculate the distance between self and other_object
-        x1 = self.position[0]
-        y1 = self.position[1]
-        x2 = other_object.position[0]
-        y2 = other_object.position[1]
+        x1, y1 = self.position
+        x2, y2 = other_object.position
         distx = x2 - x1
         disty = y2 - y1
-        distance = ((distx) ** 2 + (disty) ** 2) 
+        distance = (distx ** 2 + disty ** 2)
         angle = math.atan2(disty, distx)
         
-        return [distance, angle]
+        return distance, angle
 
     def calculate_acceleration(self, other):
-
         G = 6.67430e-11  # Gravitational constant: m^3 kg^(-1) s^(-2)
     
         # Calculate the distance and angle between self and other object
-        distance = self.calculate_distance(other)[0]
-        angle = self.calculate_distance(other)[1]
+        distance, angle = self.calculate_distance(other)
 
-        # Assign the mass of the other object to self.mass
+        # Assign the mass of the other object to autre_mass
         autre_mass = other.mass
     
         # Calculate the acceleration components
         if distance == 0:
-            return [0 ,0]
+            return [0, 0]
         else:
-            a_x = (math.cos(angle) * (autre_mass * G) / distance)
-            a_y = (math.sin(angle) * (autre_mass * G) / distance)
+            a_x = (math.cos(angle) * (autre_mass * G) / distance ** 2)
+            a_y = (math.sin(angle) * (autre_mass * G) / distance ** 2)
+            
             return [a_x, a_y]
 
-    def update_position_and_velocity(self, other):
-        acc = self.calculate_acceleration(other)
-        self.position[0] += self.velocity[0] + (0.5 * acc[0])
-        self.position[1] += self.velocity[1] + (0.5 * acc[1])
-        self.velocity[0] += acc[0]
-        self.velocity[1] += acc[1]
-        return (self.position, self.velocity)
-
-
+    def update_position_and_velocity(self, acc):
+        dt = 1  # Time step
+        self.position[0] += self.velocity[0] * dt + (0.5 * acc[0] * dt ** 2)
+        self.position[1] += self.velocity[1] * dt + (0.5 * acc[1] * dt ** 2)
+        self.velocity[0] += acc[0] * dt
+        self.velocity[1] += acc[1] * dt
 
     def simulate_motion(self, other_objects, time_steps):
-        # Create a list to store the acceleration of each astre
         acceleration_list = [[0, 0] for _ in range(len(other_objects))]
+        positions = []
 
         for _ in range(time_steps):
             print(time_steps - _)
-            # Calculate acceleration for each astre
-            for pla in range(len(other_objects)):
-                for autre_pla in range(len(other_objects)):
-                    if pla == autre_pla:
-                        continue  # Skip calculating acceleration with self
+            # Calculate acceleration for each object
+            for i in range(len(other_objects)):
+                for j in range(len(other_objects)):
+                    if i == j or other_objects[j] is self:  # Exclude self and soleil
+                        continue
 
-                    acceleration = self.calculate_acceleration(other_objects[autre_pla])
-                    acceleration_list[pla][0] += acceleration[0]
-                    acceleration_list[pla][1] += acceleration[1]
+                    acceleration = other_objects[i].calculate_acceleration(other_objects[j])
 
-            # Update position and velocity for each astre
+                    acceleration_list[i][0] += acceleration[0]
+                    acceleration_list[i][1] += acceleration[1]
 
-                    astre = other_objects[pla]
-                    autre_astre = other_objects[autre_pla]
-                    astre.update_position_and_velocity(autre_astre)
+            # Update position and velocity for each object
+            for i in range(len(other_objects)):
+                if other_objects[i] is not self:  # Exclude soleil
+                    other_objects[i].update_position_and_velocity(acceleration_list[i])
 
-        return acceleration_list
+            positions.append([obj.position for obj in other_objects])
+
+        return positions
 
 
 # Create the celestial objects
@@ -90,11 +84,8 @@ neptune = Solar('Neptune', 1.02413e+26, [-4546599342000.0, 0], [0, 5430.0])
 astres = [soleil, mercure, venus, terre, mars, jupiter, saturne, uranus, neptune]
 
 # Simulate the motion of the celestial objects for a certain number of time steps
-time_steps = 24*3600  # Replace with the desired number of time steps
-acceleration_list = soleil.simulate_motion(astres, time_steps)
+time_steps = 24 * 3600 * 7  # Replace with the desired number of time steps
 
-# Print the acceleration of each astre
-for pla, acceleration in enumerate(acceleration_list):
-    print(f"Astres {pla+1} acceleration: {acceleration}")
-
-
+result = soleil.simulate_motion(astres, time_steps)
+np.save('result_class.npy', result)
+print('Position data has been saved')
