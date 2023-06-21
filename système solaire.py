@@ -101,10 +101,11 @@ def pop(temps):
         liste_a.append(liste_acc_vide)
         print(temps-t)
         
-    return liste_a
-result = (pop(3600*24))
+    return liste_p
+result = (pop(60*24))
 
+print(result)
 # Save the result to a file using NumPy save()
-#gg
+
 np.save('result.npy', result)
 print('Hello mother')
