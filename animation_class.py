@@ -1,9 +1,10 @@
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 loaded_result = np.load('result_class.npy')
-cut_list = loaded_result[::300]
-
+cut_list = loaded_result[::90*24]
+print(cut_list)
 # Enable interactive mode
 plt.ion()
 

@@ -1,5 +1,5 @@
-import math
 import numpy as np
+import math
 
 class Solar:
     def __init__(self, name, mass, position, velocity):
@@ -14,13 +14,13 @@ class Solar:
         x2, y2 = other_object.position
         distx = x2 - x1
         disty = y2 - y1
-        distance = (distx ** 2 + disty ** 2)
+        distance = distx ** 2 + disty ** 2
         angle = math.atan2(disty, distx)
         
         return distance, angle
 
     def calculate_acceleration(self, other):
-        G = 6.67430e-11  # Gravitational constant: m^3 kg^(-1) s^(-2)
+        G = 6.67430e-11 * 3600  # Gravitational constant: m^3 kg^(-1) s^(-2) -> m^3 kg^(-1) min^(-2)
     
         # Calculate the distance and angle between self and other object
         distance, angle = self.calculate_distance(other)
@@ -32,60 +32,48 @@ class Solar:
         if distance == 0:
             return [0, 0]
         else:
-            a_x = (math.cos(angle) * (autre_mass * G) / distance ** 2)
-            a_y = (math.sin(angle) * (autre_mass * G) / distance ** 2)
+            a_x = (math.cos(angle) * (autre_mass * G) / distance )
+            a_y = (math.sin(angle) * (autre_mass * G) / distance )
             
             return [a_x, a_y]
 
     def update_position_and_velocity(self, acc):
-        dt = 1  # Time step
+        dt = 1  # Time step (1 minute)
         self.position[0] += self.velocity[0] * dt + (0.5 * acc[0] * dt ** 2)
         self.position[1] += self.velocity[1] * dt + (0.5 * acc[1] * dt ** 2)
         self.velocity[0] += acc[0] * dt
         self.velocity[1] += acc[1] * dt
-
-    def simulate_motion(self, other_objects, time_steps):
-        acceleration_list = [[0, 0] for _ in range(len(other_objects))]
-        positions = []
-
-        for _ in range(time_steps):
-            print(time_steps - _)
-            # Calculate acceleration for each object
-            for i in range(len(other_objects)):
-                for j in range(len(other_objects)):
-                    if i == j or other_objects[j] is self:  # Exclude self and soleil
-                        continue
-
-                    acceleration = other_objects[i].calculate_acceleration(other_objects[j])
-
-                    acceleration_list[i][0] += acceleration[0]
-                    acceleration_list[i][1] += acceleration[1]
-
-            # Update position and velocity for each object
-            for i in range(len(other_objects)):
-                if other_objects[i] is not self:  # Exclude soleil
-                    other_objects[i].update_position_and_velocity(acceleration_list[i])
-
-            positions.append([obj.position for obj in other_objects])
-
-        return positions
-
+        return self.position
 
 # Create the celestial objects
 soleil = Solar('Soleil', 1.989e+30, [0, 0], [0, 0])
-mercure = Solar('Mercure', 3.3011e+23, [-69816900000.0, 0], [0, 38860.0])
-venus = Solar('Venus', 4.8675e+24, [-108942109000.0, 0], [0, 34790.0])
-terre = Solar('Terre', 5.97237e+24, [-152097701000.0, 0], [0, 29290.0])
-mars = Solar('Mars', 6.4171e+23, [-249232432000.0, 0], [0, 24130.0])
-jupiter = Solar('Jupiter', 1.8982e+27, [-816520800000.0, 0], [0, 13070.0])
-saturne = Solar('Saturne', 5.6834e+26, [-1513325783000.0, 0], [0, 9690.0])
-uranus = Solar('Uranus', 8.681e+25, [-3002962242000.0, 0], [0, 6810.0])
-neptune = Solar('Neptune', 1.02413e+26, [-4546599342000.0, 0], [0, 5430.0])
+mercure = Solar('Mercure', 3.3011e+23, [-69816900000.0, 0], [0, 38860.0 * 60])  # Convert velocity to minutes
+venus = Solar('Venus', 4.8675e+24, [-108942109000.0, 0], [0, 34790.0 * 60])  # Convert velocity to minutes
+terre = Solar('Terre', 5.97237e+24, [-152097701000.0, 0], [0, 29290.0 * 60])  # Convert velocity to minutes
+mars = Solar('Mars', 6.4171e+23, [-249232432000.0, 0], [0, 24130.0 * 60])  # Convert velocity to minutes
+jupiter = Solar('Jupiter', 1.8982e+27, [-816520800000.0, 0], [0, 13070.0 * 60])  # Convert velocity to minutes
+saturne = Solar('Saturne', 5.6834e+26, [-1513325783000.0, 0], [0, 9690.0 * 60])  # Convert velocity to minutes
+uranus = Solar('Uranus', 8.681e+25, [-3002962242000.0, 0], [0, 6810.0 * 60])  # Convert velocity to minutes
+neptune = Solar('Neptune', 1.02413e+26, [-4546599342000.0, 0], [0, 5430.0 * 60])  # Convert velocity to minutes
 astres = [soleil, mercure, venus, terre, mars, jupiter, saturne, uranus, neptune]
 
 # Simulate the motion of the celestial objects for a certain number of time steps
-time_steps = 24 * 3600 * 7  # Replace with the desired number of time steps
+time_steps = 60 * 24 *30  # Replace with the desired number of time steps in minutes
 
-result = soleil.simulate_motion(astres, time_steps)
+liste_p = [[[0, 0], [-69788000000, 0], [-108942109000.0, 0], [-152097701000.0, 0], [-249232432000.0, 0], [-816520800000.0, 0], [-1513325783000.0, 0], [-3002962242000.0, 0], [-4546599342000.0, 0]]]
+liste_pos = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+for temps in range(time_steps):
+    print(time_steps - temps)
+    liste_acc = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+    for planet in range(9):
+        for autre_planet in range(9):
+            liste_acc[planet][0] += astres[planet].calculate_acceleration(astres[autre_planet])[0]
+            liste_acc[planet][1] += astres[planet].calculate_acceleration(astres[autre_planet])[1]
+        liste_pos[planet] = astres[planet].update_position_and_velocity(liste_acc[planet])
+    liste_p.append(liste_pos)  # Append a copy of liste_pos to liste_p
+
+result = liste_p
+
 np.save('result_class.npy', result)
 print('Position data has been saved')
+print(result)
