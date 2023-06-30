@@ -58,7 +58,7 @@ neptune = Solar('Neptune', 1.02413e+26, [-4546599342000.0, 0], [0, 5430.0 * 60])
 astres = [soleil, mercure, venus, terre, mars, jupiter, saturne, uranus, neptune]
 
 # Simulate the motion of the celestial objects for a certain number of time steps
-time_steps = 60 * 24 *30  # Replace with the desired number of time steps in minutes
+time_steps = 60*24*7   # Replace with the desired number of time steps in minutes
 
 liste_p = [[[0, 0], [-69788000000, 0], [-108942109000.0, 0], [-152097701000.0, 0], [-249232432000.0, 0], [-816520800000.0, 0], [-1513325783000.0, 0], [-3002962242000.0, 0], [-4546599342000.0, 0]]]
 liste_pos = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
@@ -73,7 +73,7 @@ for temps in range(time_steps):
     liste_p.append(liste_pos)  # Append a copy of liste_pos to liste_p
 
 result = liste_p
-
+print(result)
 np.save('result_class.npy', result)
 print('Position data has been saved')
 print(result)
