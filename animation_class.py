@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 loaded_result = np.load('result_class.npy')
-cut_list = loaded_result[::90*24]
+cut_list = loaded_result[::3000]
 print(cut_list)
+
 # Enable interactive mode
-plt.ion()
+
 
 # Set the dark background style
 plt.style.use('dark_background')
@@ -32,7 +33,7 @@ neptune_scaling_factor = 30.0
 prev_positions = [[[], []] for _ in range(len(labels))]
 
 # Plot smaller planets first
-for data in cut_list:
+for data in loaded_result:
     # Clear the current plot
     plt.clf()
 
@@ -77,7 +78,7 @@ for data in cut_list:
     plt.pause(0.01)
 
 # Clear the plot
-plt.clf()
+plt.show()
 
 # Plot larger planets and Sun only
 for data in cut_list:
